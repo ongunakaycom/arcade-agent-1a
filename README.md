@@ -136,10 +136,6 @@ Evaluates the submitted text and returns a structured verdict.
 
 > `reply` mirrors `summary` for compatibility with simple chat-style consumers.
 
-## Notes
-
-- Keep `.env.example` in the repo; do not commit real secrets.
-
 ## License
 
 This project is licensed under the [MIT License](./LICENSE).
