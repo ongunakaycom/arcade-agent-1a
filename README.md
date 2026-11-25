@@ -7,13 +7,13 @@
 [![Pydantic](https://img.shields.io/badge/Pydantic-Structured%20Output-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-[![Live App](https://img.shields.io/badge/Live%20App-Cloud%20Run-4285F4?logo=googlechrome&logoColor=white)](https://arcade-agent-814321309483.us-central1.run.app)
+[![Live App](https://img.shields.io/badge/Live%20App-Cloud%20Run-4285F4?logo=googlechrome&logoColor=white)](https://arcade-agent-rnpfo6mq4q-uc.a.run.app)
 [![Demo Video](https://img.shields.io/badge/Demo-YouTube-FF0000?logo=youtube&logoColor=white)](https://youtu.be/5jbCTf_hu8U)
 
 A single-request AI evaluation agent built for the **Arcade Build-a-thon**. Paste a rough bio or skills summary, and Portfolio Builder returns a readiness score, actionable findings, and a polished portfolio draft.
 
-- **Demo:** [YouTube](https://youtu.be/5jbCTf_hu8U)
-- **Live App:** [arcade-agent-814321309483.us-central1.run.app](https://arcade-agent-814321309483.us-central1.run.app)
+- **Demo:** [https://youtu.be/5jbCTf_hu8U](https://youtu.be/5jbCTf_hu8U)
+- **Live App:** [https://arcade-agent-rnpfo6mq4q-uc.a.run.app](https://arcade-agent-rnpfo6mq4q-uc.a.run.app)
 
 ## What It Does
 
@@ -25,7 +25,7 @@ Portfolio Builder takes an unstructured skills/background summary and produces:
 | **Findings** | Specific gaps, risks, or weaknesses holding the profile back. |
 | **Improved Output** | A polished, single-file HTML/CSS (Tailwind) portfolio draft. |
 
-The agent is stateless: one request, one verdict.
+The agent exposes a stateless HTTP endpoint: one request returns one structured verdict.
 
 ## Tech Stack
 
@@ -75,11 +75,14 @@ cp .env.example .env
 ### Run Locally
 
 ```bash
+gcloud auth application-default login  # first-time local Vertex AI auth
+
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 export DEVSHELL_PROJECT_ID=your-gcp-project-id
+# export VERIFY_TOKEN=your-token  # optional; not required for normal local requests
 python main.py
 ```
 
@@ -87,11 +90,13 @@ Open `http://localhost:8080`.
 
 ## Deploy to Cloud Run
 
-From the project directory in Cloud Shell:
+From the project directory in Cloud Shell (replace `arcade-agent-1` / `arcade-agent` with your own project and service names if you cloned this repo):
 
 ```bash
 gcloud config set project arcade-agent-1
 
+# VERIFY_TOKEN is created/reused by the official Step 5 deploy flow.
+# If deploying manually, set it first: export VERIFY_TOKEN=$(openssl rand -hex 16)
 gcloud run deploy arcade-agent \
   --source . \
   --region us-central1 \
@@ -128,6 +133,8 @@ Evaluates the submitted text and returns a structured verdict.
   "reply": "Short verdict summary..."
 }
 ```
+
+> `reply` mirrors `summary` for compatibility with simple chat-style consumers.
 
 ## Notes
 
