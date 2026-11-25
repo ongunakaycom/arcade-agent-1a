@@ -7,6 +7,9 @@
 [![Pydantic](https://img.shields.io/badge/Pydantic-Structured%20Output-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
+[![Live App](https://img.shields.io/badge/Live%20App-Cloud%20Run-4285F4?logo=googlechrome&logoColor=white)](https://arcade-agent-814321309483.us-central1.run.app)
+[![Demo Video](https://img.shields.io/badge/Demo-YouTube-FF0000?logo=youtube&logoColor=white)](https://youtu.be/5jbCTf_hu8U)
+
 A single-request AI evaluation agent built for the **Arcade Build-a-thon**. Paste a rough bio or skills summary, and Portfolio Builder returns a readiness score, actionable findings, and a polished portfolio draft.
 
 - **Demo:** [YouTube](https://youtu.be/5jbCTf_hu8U)
