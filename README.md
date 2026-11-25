@@ -1,43 +1,75 @@
-# Portfolio Builder (Evaluator Agent)
+# Portfolio Builder
 
-A single-request evaluation agent built for the Arcade Build-a-thon. Paste a rough bio or skills summary, and the agent returns:
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0-000000?logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![Google Cloud Run](https://img.shields.io/badge/Cloud%20Run-Deployed-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
+[![Vertex AI](https://img.shields.io/badge/Vertex%20AI-Gemini-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/vertex-ai)
+[![Pydantic](https://img.shields.io/badge/Pydantic-Structured%20Output-E92063?logo=pydantic&logoColor=white)](https://docs.pydantic.dev/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-- **Readiness score** (0–100)
-- **Findings** — specific gaps or issues holding the profile back
-- **Improved output** — a polished, single-file HTML/CSS (Tailwind) portfolio draft
+A single-request AI evaluation agent built for the **Arcade Build-a-thon**. Paste a rough bio or skills summary, and Portfolio Builder returns a readiness score, actionable findings, and a polished portfolio draft.
+
+- **Demo:** [YouTube](https://youtu.be/5jbCTf_hu8U)
+- **Live App:** [arcade-agent-814321309483.us-central1.run.app](https://arcade-agent-814321309483.us-central1.run.app)
+
+## What It Does
+
+Portfolio Builder takes an unstructured skills/background summary and produces:
+
+| Output | Description |
+|---|---|
+| **Readiness Score** | A 0–100 score reflecting how ready the profile is for hiring managers. |
+| **Findings** | Specific gaps, risks, or weaknesses holding the profile back. |
+| **Improved Output** | A polished, single-file HTML/CSS (Tailwind) portfolio draft. |
+
+The agent is stateless: one request, one verdict.
 
 ## Tech Stack
 
 - **Backend:** Python, Flask, Gunicorn
-- **AI:** Gemini via Google Gen AI SDK (`google-genai`) on Vertex AI
-- **Validation:** Pydantic structured output (`VerdictResponse`)
-- **Deployment:** Docker, Google Cloud Run
+- **AI:** Gemini via [Google Gen AI SDK](https://github.com/googleapis/python-genai) on Vertex AI
+- **Structured Output:** Pydantic schema (`VerdictResponse`) for reliable JSON responses
+- **Containerization:** Docker (`python:3.11-slim`)
+- **Deployment:** Google Cloud Run
 
 ## Project Structure
 
 ```text
 .
-├── Dockerfile
-├── main.py
-├── requirements.txt
-├── .env.example
-├── .gitignore
-└── README.md
+├── .env.example        # Environment variable template
+├── .gitignore          # Git ignore rules (secrets, env, cache)
+├── Dockerfile          # Container image for Cloud Run
+├── LICENSE
+├── main.py             # Flask app, Gemini integration, UI
+├── README.md
+└── requirements.txt    # Python dependencies
 ```
 
-## Environment Variables
+## Getting Started
+
+### Prerequisites
+
+- Python 3.11+
+- A Google Cloud project with Vertex AI API enabled
+- `gcloud` CLI authenticated (`gcloud auth application-default login`)
+
+### Environment Variables
+
+Copy `.env.example` to `.env` and fill in the required values:
+
+```bash
+cp .env.example .env
+```
 
 | Variable | Required | Description |
 |---|---|---|
-| `DEVSHELL_PROJECT_ID` | Yes | GCP project ID used by Vertex AI client. |
-| `VERIFY_TOKEN` | Deploy/runtime | Private verification token set during Cloud Run deploy. Do not commit. |
-| `PORT` | No | Server port (default: `8080`). |
+| `DEVSHELL_PROJECT_ID` | Yes | GCP project ID used by the Vertex AI client. |
+| `VERIFY_TOKEN` | Deploy/runtime | Private verification token set during Cloud Run deployment. |
+| `PORT` | No | Local/server port. Defaults to `8080`. |
 
-Copy `.env.example` to `.env` for local development and fill in values. **Never commit `.env` or service account keys.**
+> **Security:** Never commit `.env`, service account JSON keys, or private tokens.
 
-## Run Locally
-
-Prerequisites: Python 3.11+, GCP credentials with Vertex AI access.
+### Run Locally
 
 ```bash
 python -m venv .venv
@@ -45,19 +77,18 @@ source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 export DEVSHELL_PROJECT_ID=your-gcp-project-id
-# export VERIFY_TOKEN=...  # optional for local testing
-
 python main.py
 ```
 
-The app listens on `http://localhost:8080`.
+Open `http://localhost:8080`.
 
 ## Deploy to Cloud Run
 
-From the project directory in Cloud Shell (with `gcloud` authenticated and project set):
+From the project directory in Cloud Shell:
 
 ```bash
 gcloud config set project arcade-agent-1
+
 gcloud run deploy arcade-agent \
   --source . \
   --region us-central1 \
@@ -67,22 +98,39 @@ gcloud run deploy arcade-agent \
   --quiet
 ```
 
-> Use the official build-a-thon Step 5 deploy block if you need the pre-deploy checks and verification token flow.
+For the Arcade Build-a-thon, use the official Step 5 deploy block to include pre-deploy checks and verification token setup.
 
 ## API
 
 ### `POST /chat`
 
-Request:
+Evaluates the submitted text and returns a structured verdict.
+
+**Request**
 
 ```json
-{ "message": "Your rough bio or skills summary..." }
+{
+  "message": "Python, Flask, Docker, GCP Cloud Run. 2 years building web apps."
+}
 ```
 
-Response includes `score`, `summary`, `findings`, `output` (and `reply` for compatibility).
+**Response**
 
-## Security / Cleanup Notes
+```json
+{
+  "score": 72,
+  "summary": "Short verdict summary...",
+  "findings": ["Finding 1", "Finding 2"],
+  "output": "<!DOCTYPE html>...",
+  "reply": "Short verdict summary..."
+}
+```
 
-- Do **not** commit `.env`, service account JSON keys, or private tokens.
-- Keep `.env.example` for safe configuration sharing.
-- Do **not** delete the `arcade-agent-1` project or the `arcade-agent` Cloud Run service until course verification is complete.
+## Notes
+
+- Keep `.env.example` in the repo; do not commit real secrets.
+- Do **not** delete the `arcade-agent-1` GCP project or the `arcade-agent` Cloud Run service until course verification is complete.
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
