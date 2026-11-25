@@ -139,7 +139,6 @@ Evaluates the submitted text and returns a structured verdict.
 ## Notes
 
 - Keep `.env.example` in the repo; do not commit real secrets.
-- Do **not** delete the `arcade-agent-1` GCP project or the `arcade-agent` Cloud Run service until course verification is complete.
 
 ## License
 
