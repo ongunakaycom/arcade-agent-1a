@@ -12,7 +12,6 @@
 A single-request AI evaluation agent built for the **Arcade Build-a-thon**. Paste a rough bio or skills summary, and Portfolio Builder returns a readiness score, actionable findings, and a polished portfolio draft.
 
 - **Demo:** [https://youtu.be/5jbCTf_hu8U](https://youtu.be/5jbCTf_hu8U)
-- **Live App:** [https://arcade-agent-rnpfo6mq4q-uc.a.run.app](https://arcade-agent-rnpfo6mq4q-uc.a.run.app)
 
 ## What It Does
 
